@@ -2,33 +2,33 @@ name: Escape Room Crash Course
 image: pwncollege/challenge-legacy
 resources:
   - type: header
-    content: Challenges
+    content: Algo de stegno
   - type: challenge
     id: strings
     name: strings!
   - type: challenge
     id: file
-    name: file!
+    name: file
   - type: challenge
     id: exiftool
-    name: exiftool!
+    name: exiftool
   - type: header
     content: Nuestra herramienta magica, codecs.py
   - type: challenge
     id: codecs-b64
-    name: b64!
+    name: b64
   - type: challenge
     id: codecs-xor
-    name: xor!
+    name: xor
   - type: challenge
     id: codecs-rot13
-    name: rot13!
+    name: rot13
   - type: challenge
     id: codecs-hex
-    name: hex!
+    name: hex
   - type: challenge
     id: codecs-rev
-    name: rev!
+    name: rev
   - type: challenge
     id: codecs-caesar
-    name: caesar!
+    name: caesar
