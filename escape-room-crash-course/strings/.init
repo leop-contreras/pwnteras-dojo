@@ -1,0 +1,31 @@
+#!/usr/local/bin/python
+
+import os
+import pathlib
+import random
+
+flag = pathlib.Path("/flag").read_bytes().strip()
+
+# Noise bytes are drawn from non-printable values only, so the only strings `strings` finds are the ones we plant.
+noise_bytes = bytes(b for b in range(256) if not (0x20 <= b <= 0x7e) and b not in b"\t\n\r\x0b\x0c")
+
+def noise(size):
+    return bytes(random.choice(noise_bytes) for _ in range(size))
+
+decoys = [
+    b"The door is locked.",
+    b"Nothing to see here...",
+    b"Have you tried looking under the rug?",
+    b"The key is not in this sentence.",
+]
+
+chunks = [noise(random.randint(512, 2048))]
+for planted in random.sample(decoys + [flag], len(decoys) + 1):
+    chunks.append(planted)
+    chunks.append(noise(random.randint(512, 2048)))
+
+flag_path = pathlib.Path("/home/hacker/flag")
+flag_path.unlink(missing_ok=True)
+flag_path.write_bytes(b"".join(chunks))
+os.chown(flag_path, 1000, 1000)
+flag_path.chmod(0o400)

@@ -1,0 +1,5 @@
+name: Escape Room Crash Course
+image: pwncollege/challenge-legacy
+challenges:
+  - id: strings
+    name: strings!
