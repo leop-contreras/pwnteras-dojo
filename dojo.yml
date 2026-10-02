@@ -1,5 +1,6 @@
 id: pwnteras
 name: PwnTeras
 image: pwncollege/challenge-simple
+type: public
 modules:
   - id: escape-room-crash-course
