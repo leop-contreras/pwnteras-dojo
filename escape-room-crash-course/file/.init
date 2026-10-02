@@ -1,0 +1,12 @@
+#!/usr/local/bin/python
+
+import os
+import pathlib
+
+flag = pathlib.Path("/flag").read_text().strip()
+
+flag_path = pathlib.Path("/home/hacker/flag.png")
+flag_path.unlink(missing_ok=True)
+flag_path.write_text(f"Esto no es una imagen.\nLa flag es: {flag}\n")
+os.chown(flag_path, 1000, 1000)
+flag_path.chmod(0o400)

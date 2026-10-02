@@ -1,0 +1,21 @@
+#!/usr/local/bin/python
+
+import importlib.util
+import os
+import pathlib
+import random
+
+spec = importlib.util.spec_from_file_location("codecs_tool", pathlib.Path(__file__).parent / "codecs.py")
+tool = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(tool)
+
+flag = pathlib.Path("/flag").read_text().strip()
+
+def write_home(name, content):
+    path = pathlib.Path("/home/hacker") / name
+    path.unlink(missing_ok=True)
+    path.write_bytes(content.encode("latin-1"))
+    os.chown(path, 1000, 1000)
+    path.chmod(0o400)
+
+write_home("flag", tool.reverse(flag) + "\n")

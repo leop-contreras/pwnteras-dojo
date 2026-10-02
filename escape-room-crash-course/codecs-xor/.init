@@ -1,0 +1,41 @@
+#!/usr/local/bin/python
+
+import importlib.util
+import os
+import pathlib
+import random
+
+spec = importlib.util.spec_from_file_location("codecs_tool", pathlib.Path(__file__).parent / "codecs.py")
+tool = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(tool)
+
+flag = pathlib.Path("/flag").read_text().strip()
+
+def write_home(name, content):
+    path = pathlib.Path("/home/hacker") / name
+    path.unlink(missing_ok=True)
+    path.write_bytes(content.encode("latin-1"))
+    os.chown(path, 1000, 1000)
+    path.chmod(0o400)
+
+# The ciphertext gets passed back as "$(cat ~/flag)", so it must not contain NUL (impossible in argv),
+# newlines (stripped by $(...)) or bytes that mess with the terminal when someone cats it.
+forbidden = {0x00, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x1b, 0x7f}
+letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+def pick_key(length):
+    key = ""
+    for j in range(length):
+        column = flag[j::length]
+        options = [c for c in letters if all(ord(f) ^ ord(c) not in forbidden for f in column)]
+        if not options:
+            return None
+        key += random.choice(options)
+    return key
+
+key = None
+while key is None:
+    key = pick_key(random.randint(4, 8))
+
+write_home("flag", tool.xor(flag, key))
+write_home("llave", key + "\n")

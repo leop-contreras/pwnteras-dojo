@@ -1,0 +1,32 @@
+#!/usr/local/bin/python
+
+import os
+import pathlib
+import random
+import struct
+import zlib
+
+flag = pathlib.Path("/flag").read_text().strip()
+
+def chunk(kind, data):
+    return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
+
+# A small random-colored RGB image, built with the standard library only (the image has no Pillow).
+width, height = 64, 64
+color = bytes(random.randrange(256) for _ in range(3))
+pixels = b"".join(b"\x00" + color * width for _ in range(height))
+
+# zTXt stores the comment compressed, so `strings` can't see it but `exiftool` decodes it.
+png = b"".join([
+    b"\x89PNG\r\n\x1a\n",
+    chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)),
+    chunk(b"zTXt", b"Comment\x00\x00" + zlib.compress(flag.encode())),
+    chunk(b"IDAT", zlib.compress(pixels)),
+    chunk(b"IEND", b""),
+])
+
+foto_path = pathlib.Path("/home/hacker/foto.png")
+foto_path.unlink(missing_ok=True)
+foto_path.write_bytes(png)
+os.chown(foto_path, 1000, 1000)
+foto_path.chmod(0o400)
