@@ -1,12 +1,9 @@
-You wake up in a locked room. The only thing in it is a strange file in your home directory: `~/flag`.
+Cuando se hace `cat` a un ejecutable, sale pura basura. Pero a veces el comando `strings` puede mostrar información útil.
 
-Try to `cat` it and you'll get a screen full of garbage, because it's a binary blob.
-Somewhere in that noise there's readable text, though, and one piece of it is the flag.
-
-The `strings` command finds and prints every run of printable characters in a file:
+El comando `strings` busca e imprime todos los caracteres legibles:
 
 ```console
 hacker@dojo:~$ strings /path/to/some/file
 ```
 
-Run `strings` on `~/flag` to find the flag and escape the room!
+Ejecuta `strings` en `~/flag` para encontrar la flag.
